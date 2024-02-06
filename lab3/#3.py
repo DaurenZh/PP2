@@ -245,6 +245,10 @@ def guess_the_number():
             print("Your guess is too high.")
 guess_the_number()
 #Functions1.14
+a = int(input())
+arr3 = [int(input()) for i in range(a)]
+result_14 = unique_elements(arr3)
+print_histogram(result_14)
 
 
 
