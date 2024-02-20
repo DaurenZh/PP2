@@ -1,14 +1,10 @@
 import re
-def camel_to_snake(camel_case):
-    snake_case = ''
-    for char in camel_case:
-        if char.isupper():
-            snake_case += '_' + char.lower()
-        else:
-            snake_case += char
-    return snake_case
 
-camel_string = "convertThisCamelCaseString"
-snake_string = camel_to_snake(camel_string)
-print("Camel Case:", camel_string)
-print("Snake Case:", snake_string)
+def insert_spaces(string):
+    modified_string = re.sub(r'([a-z])([A-Z])', r'\1 \2', string)
+    return modified_string
+
+string = "ThisIsAString"
+new_string = insert_spaces(string)
+print("Original string:", string)
+print("New string:", new_string)
