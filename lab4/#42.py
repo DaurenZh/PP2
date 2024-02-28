@@ -1,7 +1,7 @@
 import datetime
 #1
 current_date = datetime.now()
-five_days_ago = current_date - datetime.timedelta(days=5)
+five_days_ago = current_date - datetime.timedelta(days=5) #days, hours, seconds, weeks       
 print("Five days ago from today was:", five_days_ago)
 #2
 today = datetime.now()

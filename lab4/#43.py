@@ -3,14 +3,15 @@ def squares_generator(N):
     for i in range(N):
         yield i ** 2
 #2
-def even_numbers_up_to_N(N):
+def even_numbers(N):
     for i in range(N + 1):
         if i % 2 == 0:
             yield i
 
 n = int(input("Enter a number: "))
-even_nums = even_numbers_up_to_N(n)
-print(','.join(map(str, even_nums)))
+list_of_nums = [int(input) for i in range(n)]
+for i in even_numbers(list_of_nums):
+    print (i, end = " ")
 #3
 def divisible_by_3_and_4(start, end):
     for i in range(start, end + 1):
