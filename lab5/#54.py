@@ -2,7 +2,7 @@ import re
 
 def find_uppercase_lowercase_sequence(string):
     pattern = r'[A-Z][a-z]+'
-    matches = re.findall(pattern, string)
+    matches = re.findall(pattern, string) #all non-overlapping occurences of the pattern
     return matches
 
 test_string = "TestString"

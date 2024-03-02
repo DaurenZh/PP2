@@ -1,8 +1,8 @@
 import re
 
 def match_pattern(string):
-    pattern = r'a.*b$'
-    if re.match(pattern, string):
+    pattern = r'^a.*b$' # . - some char, $ - end, ^ - starts with
+    if re.match(pattern, string): # re.match checks if the pattern matches at the beginning 
         return True
     else:
         return False

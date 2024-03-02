@@ -41,8 +41,8 @@ result = square_root_after_milliseconds(number, milliseconds)
 print(f"Square root of {number} after {milliseconds} milliseconds is {result}.")
 #5
 def all_elem_true(my_tuple):
-    ans = all(my_tuple)
-    return ans
+    res = all(my_tuple)
+    return res
 my_tuple = (True, True)
 my_tuple2 = (False, True)
 print(all_elem_true(my_tuple))

@@ -1,7 +1,7 @@
 import re
 
 def match_pattern(string):
-    pattern = r'ab{2,3}'
+    pattern = r'ab{2,3}' #{} - specified number of objects (from 2 to 3)
     if re.fullmatch(pattern, string):
         return True
     else:
