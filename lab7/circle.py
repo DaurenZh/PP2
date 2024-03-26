@@ -1,60 +1,51 @@
-import pygame 
-import time
+import pygame
 
+# Initialize Pygame
 pygame.init()
 
-window_surface = pygame.display.set_mode((800, 600))
-pygame.display.set_caption('Circle')
+# Set up the screen
+screen_width = 800
+screen_height = 600
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Moving Ball")
 
-game_over = False
+# Colors
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
-x1 = 400
-y1 = 300
- 
-x1_change = 0       
-y1_change = 0
- 
-clock = pygame.time.Clock()
+# Ball properties
+ball_radius = 25
+ball_x = (screen_width - ball_radius) // 2
+ball_y = (screen_height - ball_radius) // 2
+ball_speed = 20
 
-font_style = pygame.font.SysFont(None, 50)
- 
-def message(msg,color):
-    mesg = font_style.render(msg, True, color)
-    window_surface.blit(mesg, [400, 300])
-
-while not game_over:
+# Main game loop
+running = True
+while running:
+    screen.fill(WHITE)
+    
+    # Draw the ball
+    pygame.draw.circle(screen, RED, (ball_x, ball_y), ball_radius)
+    
+    # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            game_over = True
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                x1_change = -10
-                y1_change = 0
-            elif event.key == pygame.K_RIGHT:
-                x1_change = 10
-                y1_change = 0
-            elif event.key == pygame.K_UP:
-                y1_change = -10
-                x1_change = 0
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                ball_y = max(0, ball_y - ball_speed)
             elif event.key == pygame.K_DOWN:
-                y1_change = 10
-                x1_change = 0
-            
-    if x1 >= 800 or x1 < 0 or y1 >= 600 or y1 < 0:
-        game_over = True
- 
- 
-    x1 += x1_change
-    y1 += y1_change
-    window_surface.fill((255, 255, 255))
-    pygame.draw.circle(window_surface, (255, 0, 0), (x1, y1), 25)
- 
-    pygame.display.update()
- 
-    clock.tick(30)
-message("You lost", (255, 0, 0))
-pygame.display.update()
-time.sleep(2)
- 
+                ball_y = min(screen_height - ball_radius, ball_y + ball_speed)
+            elif event.key == pygame.K_LEFT:
+                ball_x = max(0, ball_x - ball_speed)
+            elif event.key == pygame.K_RIGHT:
+                ball_x = min(screen_width - ball_radius, ball_x + ball_speed)
+
+    # Update the display
+    pygame.display.flip()
+
+    # Limit frame rate
+    pygame.time.Clock().tick(30)
+
+# Quit Pygame
 pygame.quit()
-quit()

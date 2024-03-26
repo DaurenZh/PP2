@@ -21,7 +21,7 @@ WHITE = (255, 255, 255)
 pygame.mixer.init()
 
 # Define some variables
-playlist = ['a-promise(chosic.com).mp3 keys-of-moon-white-petals(chosic.com).mp3', 'keys-of-moon-white-petals(chosic.com).mp3 a-promise(chosic.com).mp3']  # List of music files
+playlist = ['a-promise(chosic.com).mp3', 'keys-of-moon-white-petals(chosic.com).mp3']  # List of music files
 current_track = 0  # Index of currently playing track
 playing = False  # Whether music is currently playing
 
