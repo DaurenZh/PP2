@@ -27,7 +27,7 @@ def popup(event):
 
 def rectangle():
     canvas.create_rectangle(x, y, x + 2*brush_size, y + brush_size, fill=color, width=0)
-    draw_img.rectangle((x, y, x + 2*brush_size, y, x + 2*brush_size, y + brush_size, x, y + brush_size), fill=color, )
+    draw_img.rectangle((x, y, x + 2*brush_size, y, x + 2*brush_size, y + brush_size, x, y + brush_size), fill=color)
 
 def circle():
     canvas.create_oval(x, y, x + brush_size, y + brush_size, fill=color, width=0)  
