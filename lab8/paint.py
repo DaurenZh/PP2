@@ -1,57 +1,71 @@
 from tkinter import *
-from tkinter import colorchooser, ttk
+from PIL import Image, ImageDraw
+from random import randint
+from tkinter import colorchooser, messagebox
 
-class main:
-    def __init__(self, master):
-        self.master = master
-        self.color_fg = 'Black'
-        self.color_bg = 'white'
-        self.old_x = None
-        self.old_y = None
-        self.pen_width = 5
-        self.drawWidgets()
-        self.c.bind('<B1-Motion>', self.paint)
-        self.c.bind('<ButtonRelease-1>', self.reset)
+def draw(event):
+    x1, y1 = (event.x - brush_size), (event.y - brush_size)
+    x2, y2 = (event.x + brush_size), (event.y + brush_size)
+    canvas.create_oval(x1, y1, x2, y2, fill=color, width=0)
+    draw_img.ellipse((x1, y1, x2, y2), fill=color, width=0)
 
-    def paint(self, e):
-        if self.old_x and self.old_y:
-            self.c.create_line(self.old_x, self.old_y, e.x, e.y, width = self.pen_width, fill = self.color_fg, capstyle='round', smooth = True)
-        self.old_x = e.x
-        self.old_y = e.y
+def chooseColor():
+    global color
+    (rgb, hx) = colorchooser.askcolor()
+    color = hx
+    color_lab['bg'] = hx
 
-    def reset(self, e):
-        self.old_x = None
-        self.old_y = None
-    
-    def clearcanvas(self):
-        self.c.delete(ALL)
-    
-    def change_fg(self):
-        self.color_fg = colorchooser.askcolor(color=self.color_fg)[1]
-    
-    def change_bg(self):
-        self.color_bg = colorchooser.askcolor(color=self.color_bg)[1]
-        self.c['bg'] = self.color_bg
-    
-    def eraser(self):
-        self.color_fg = self.color_bg  # Set foreground color to background color (eraser)
-        
-    def drawWidgets(self):
-        self.c = Canvas(self.master, width=700, height=600, bg=self.color_bg)
-        self.c.pack(fill=BOTH, expand=True)
+def select(value):
+    global brush_size
+    brush_size = int(value)
 
-        menu = Menu(self.master)
-        self.master.config(menu=menu)
-        optionmenu = Menu(menu)
-        menu.add_cascade(label='Menu', menu=optionmenu)
-        optionmenu.add_command(label='Brush Color', command=self.change_fg)
-        optionmenu.add_command(label='Background Color', command=self.change_bg)
-        optionmenu.add_command(label='Eraser', command=self.eraser)  # Add Eraser option
-        optionmenu.add_command(label='Clear Canvas', command=self.clearcanvas)
-        optionmenu.add_command(label='Exit', command=self.master.destroy)    
+def popup(event):
+    global x, y 
+    x = event.x
+    y = event.y
+    menu.post(event.x_root, event.y_root)
 
+def rectangle():
+    canvas.create_rectangle(x, y, x + 2*brush_size, y + brush_size, fill=color, width=0)
+    draw_img.rectangle((x, y, x + 2*brush_size, y, x + 2*brush_size, y + brush_size, x, y + brush_size), fill=color, )
 
-win = Tk()
-win.title("Paint App")
-main(win)
-win.mainloop()
+def circle():
+    canvas.create_oval(x, y, x + brush_size, y + brush_size, fill=color, width=0)  
+    draw_img.ellipse((x, y, x + brush_size, y + brush_size), fill=color) 
+
+x = 0
+y = 0
+
+root = Tk()
+root.title('Paint')
+root.geometry('1280x720')
+root.resizable(0, 0)
+
+brush_size = 10
+color = 'black'
+
+root.columnconfigure(6, weight=1)
+root.rowconfigure(2, weight=1)
+
+canvas = Canvas(root, bg='white')
+canvas.grid(row=2, column=0, columnspan=7, padx=5, pady=5, sticky=E+W+S+N)
+
+canvas.bind('<B1-Motion>', draw)
+canvas.bind('<Button-3>', popup)
+
+menu = Menu(tearoff=0)
+menu.add_command(label="Rectangle", command=rectangle)
+menu.add_command(label="Circle", command=circle)
+image1 = Image.new('RGB', (1280, 640), 'white')
+draw_img = ImageDraw.Draw(image1)
+
+Label(root, text='Settings: ').grid(row=0, column=0, padx=6)
+
+Button(root, text='Choose color', width=11, command=chooseColor).grid(row=0, column=1, padx=6)
+
+color_lab = Label(root, bg=color, width=10)
+color_lab.grid(row=0, column=2, padx=6)
+
+Label(root, text='Actions: ').grid(row=1, column=0, padx=6)
+
+root.mainloop()
