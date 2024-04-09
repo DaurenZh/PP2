@@ -46,11 +46,17 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
-
 class Coin(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load("coin.png")
+        self.weight = random.randint(1, 3)  # Assign random weight to the coin
+        if self.weight == 1:
+            self.image = pygame.image.load("coin.png")
+        elif self.weight == 2:
+            self.image = pygame.image.load("coin2.png")
+        else:
+            self.image = pygame.image.load("coin3.png")
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
@@ -59,7 +65,6 @@ class Coin(pygame.sprite.Sprite):
         if self.rect.top > 600:
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
-
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -98,6 +103,7 @@ INC_SPEED = pygame.USEREVENT + 1
 pygame.time.set_timer(INC_SPEED, 1000)
 
 coin_count = 0
+N = 5
 
 while True:
     for event in pygame.event.get():
@@ -106,17 +112,22 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+    
+    if coin_count >= N:
+        SPEED += 0.5
+        N += 5
 
     DISPLAYSURF.blit(background, (0, 0))
     scores = font_small.render("Score: " + str(SCORE), True, BLACK)
     coin_text = font_small.render("Coins: " + str(coin_count), True, BLACK)
     DISPLAYSURF.blit(scores, (10, 10))
     DISPLAYSURF.blit(coin_text, (10, 30))
-
+    
+    # Blit each entity's image
     for entity in all_sprites:
         DISPLAYSURF.blit(entity.image, entity.rect)
         entity.move()
-
+    
     if pygame.sprite.spritecollideany(P1, enemies):
         pygame.mixer.Sound('crash.wav').play()
         time.sleep(0.5)

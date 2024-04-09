@@ -1,7 +1,6 @@
 from tkinter import *
 from PIL import Image, ImageDraw
-from random import randint
-from tkinter import colorchooser, messagebox
+from tkinter import colorchooser
 
 def draw(event):
     x1, y1 = (event.x - brush_size), (event.y - brush_size)
@@ -13,7 +12,10 @@ def chooseColor():
     global color
     (rgb, hx) = colorchooser.askcolor()
     color = hx
-    color_lab['bg'] = hx
+
+def eraser():
+    global color
+    color = 'white'
 
 def select(value):
     global brush_size
@@ -32,6 +34,23 @@ def rectangle():
 def circle():
     canvas.create_oval(x, y, x + brush_size, y + brush_size, fill=color, width=0)  
     draw_img.ellipse((x, y, x + brush_size, y + brush_size), fill=color) 
+
+def square():
+    canvas.create_rectangle(x, y, x + brush_size, y + brush_size, fill=color, width=0)  
+    draw_img.rectangle((x, y, x + brush_size, y, x + brush_size, y + brush_size, x, y + brush_size), fill=color)
+
+def right_triangle():
+    canvas.create_polygon(x, y, x, y + brush_size, x + brush_size, y + brush_size, fill=color, outline='')
+    draw_img.polygon((x, y, x, y + brush_size, x + brush_size, y + brush_size), fill=color)
+
+def equilateral_triangle():
+    height = int((3 ** 0.5) * brush_size / 2)
+    canvas.create_polygon(x, y, x + brush_size, y, x + brush_size / 2, y + height, fill=color, outline='')
+    draw_img.polygon((x, y, x + brush_size, y, x + brush_size / 2, y + height), fill=color)
+
+def rhombus():
+    canvas.create_polygon(x, y + brush_size / 2, x + brush_size / 2, y, x + brush_size, y + brush_size / 2, x + brush_size / 2, y + brush_size, fill=color, outline='')
+    draw_img.polygon((x, y + brush_size / 2, x + brush_size / 2, y, x + brush_size, y + brush_size / 2, x + brush_size / 2, y + brush_size), fill=color)
 
 x = 0
 y = 0
@@ -56,16 +75,18 @@ canvas.bind('<Button-3>', popup)
 menu = Menu(tearoff=0)
 menu.add_command(label="Rectangle", command=rectangle)
 menu.add_command(label="Circle", command=circle)
+menu.add_command(label="Square", command=square)
+menu.add_command(label="Equilateral triangle", command=equilateral_triangle)
+menu.add_command(label="Right triangle", command=right_triangle)
+menu.add_command(label="Rhombus", command=rhombus)
+
 image1 = Image.new('RGB', (1280, 640), 'white')
 draw_img = ImageDraw.Draw(image1)
 
 Label(root, text='Settings: ').grid(row=0, column=0, padx=6)
 
 Button(root, text='Choose color', width=11, command=chooseColor).grid(row=0, column=1, padx=6)
+Button(root, text='Eraser', width=11, command=eraser).grid(row=0, column=3, padx=6)
 
-color_lab = Label(root, bg=color, width=10)
-color_lab.grid(row=0, column=2, padx=6)
-
-Label(root, text='Actions: ').grid(row=1, column=0, padx=6)
 
 root.mainloop()

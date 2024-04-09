@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 # Initialize pygame
 pygame.init()
@@ -8,6 +9,7 @@ pygame.init()
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
 
 # Set the width and height of each grid block
 BLOCK_SIZE = 20
@@ -39,11 +41,13 @@ def draw_snake(snake_list):
     for segment in snake_list:
         pygame.draw.rect(gameDisplay, GREEN, [segment[0], segment[1], BLOCK_SIZE, BLOCK_SIZE])
 
-# Function to generate random food position
+# Function to generate random food position with different weights
 def generate_food():
+    weights = [YELLOW] * 3 + [RED] * 7  # More red foods for higher probability
+    food_color = random.choice(weights)
     food_x = random.randrange(0, DISPLAY_WIDTH - BLOCK_SIZE, BLOCK_SIZE)
     food_y = random.randrange(0, DISPLAY_HEIGHT - BLOCK_SIZE, BLOCK_SIZE)
-    return food_x, food_y
+    return food_x, food_y, food_color
 
 # Function to display the score and level
 def display_stats(score, level):
@@ -100,7 +104,8 @@ def game_loop():
     snake_y_change = 0
 
     # Initialize food
-    food_x, food_y = generate_food()
+    food_x, food_y, food_color = generate_food()
+    food_timer = time.time() + 10  # Food timer to make it disappear after some time
 
     while not game_exit:
         while game_over_flag:
@@ -136,10 +141,17 @@ def game_loop():
         if snake_x == food_x and snake_y == food_y:
             score += 1
             snake_length += 1
-            food_x, food_y = generate_food()
+            food_x, food_y, food_color = generate_food()
+            food_timer = time.time() + 10  # Reset food timer
+
             if score % 3 == 0:  # Increase level after every 3 foods eaten
                 level += 1
                 speed += 2  # Increase speed with each level
+
+        # Check if food timer has expired
+        if time.time() > food_timer:
+            food_x, food_y, food_color = generate_food()
+            food_timer = time.time() + 10  # Reset food timer
 
         # Update snake list
         snake_head = [snake_x, snake_y]
@@ -149,7 +161,7 @@ def game_loop():
 
         # Refresh the display
         gameDisplay.fill(BLACK)
-        pygame.draw.rect(gameDisplay, RED, [food_x, food_y, BLOCK_SIZE, BLOCK_SIZE])
+        pygame.draw.rect(gameDisplay, food_color, [food_x, food_y, BLOCK_SIZE, BLOCK_SIZE])
         draw_snake(snake_list)
         display_stats(score, level)
         pygame.display.update()
